@@ -1,0 +1,60 @@
+{% extends "admin_base_panel.html" %}
+
+{% block panel_nav %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+        <a class="navbar-brand">
+            <h1>SRH Admin Panel</h1>
+        </a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_contact_panel') }}">Contact</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_we_teach_panel') }}">We teach</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('admin_notification_panel') }}">Notification <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </nav>
+    <hr>
+{% endblock %}
+
+{% block container %}
+
+    <form action="{{ url_for('admin_notification_panel') }}" method="POST">
+        <div class="form-group">
+            <div>
+                <textarea class="form-control" name="notification" required id="exampleFormControlTextarea1" placeholder="Notification..." rows="2"></textarea>
+            </div>
+        </div>
+        <div class="form-group" style="float:right;">
+            <input type="submit" class="btn btn-success" value="Send">
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Serial</th>
+            <th>Post Date</th>
+            <th>Post Time</th>
+            <th>Notification</th>
+            <th>Action</th>
+        </tr>
+
+
+        {% for notification in notifications %}
+        <tr>
+            <td>{{ notification.serial }}</td>
+            <td>{{ notification.date }}</td>
+            <td>{{ notification.time }}</td>
+            <td>{{ notification.notification }}</td>
+            <td>
+                <a href="/delete/{{ notification.serial }}/notifications" class="btn btn-danger" onclick="return confirm('Are you sure! you want to delete this')">Remove</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+{% endblock %}

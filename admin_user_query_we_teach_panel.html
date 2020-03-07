@@ -1,0 +1,95 @@
+{% extends "admin_base_panel.html" %}
+
+{% block panel_nav %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+        <a class="navbar-brand">
+            <h1>SRH Admin Panel</h1>
+        </a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_contact_panel') }}">Contact</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('admin_we_teach_panel') }}">We teach <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin_notification_panel') }}">Notification</a>
+            </li>
+        </ul>
+    </nav>
+    <hr>
+{% endblock %}
+
+{% block container %}
+
+    <table class="table table-striped">
+        <tr>
+            <th>Serial</th>
+            <th>Post Date</th>
+            <th>Post Time</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Query</th>
+            <th>Action</th>
+            <th>Replied</th>
+        </tr>
+
+
+        {% for query in queries %}
+        <tr>
+            <td>{{ query.serial }}</td>
+            <td>{{ query.date_of_query}}</td>
+            <td>{{ query.time_of_query}}</td>
+            <td>{{ query.name }}</td>
+            <td>{{ query.phone_number }}</td>
+            <td>{{ query.email }}</td>
+            <td>{{ query.query }}</td>
+            <td>
+                <button class="btn btn-success mb-2" type="button" data-toggle="modal" data-target="#reply-{{ query.serial }}">Reply</button>
+
+                {% if query.replied == 0 %}
+                    <a href="#" class="btn btn-danger" onclick="return confirm('The user query is not yet answered!')">delete</a>
+                {% else %}
+                    <a href="/delete/{{ query.serial }}/we_teach" class="btn btn-danger" onclick="return confirm('Are you sure! you want to delete this')">delete</a>
+                {% endif %}
+
+            </td>
+            <td>
+                {% if query.replied == 0 %}
+                    <input type="checkbox" class="form-control mt-4" autofocus readonly disabled>
+                {% else %}
+                    <input type="checkbox" class="form-control mt-4" checked readonly disabled>
+                {% endif %}
+            </td>
+        </tr>
+
+        <div class="modal fade" role="dialog" id="reply-{{ query.serial }}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Reply</h3>
+                        <button type="button" class="close" data-dismiss="modal">&times</button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/reply_to_query/{{ query.email }}/{{ query.serial }}/we_teach" method="post">
+                            <div class="form-group">
+                                <textarea class="container form-control" name="reply_to_query" placeholder="{{ query.email }}"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-success" value="Send">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </table>
+
+{% endblock %}
+
